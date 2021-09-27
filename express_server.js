@@ -10,9 +10,13 @@ const urlDatabase = {
 };
 
 
+app.get("/urls/:shortURL", (req,res) => {
+  const templateVars = {shortURL: req.params.shortURL, longURL:req.url}
+  res.render("urls_show", templateVars);
+});
 
 app.get("/urls", (req,res) => {
-  const templateVars = { urls:urlDatabase }
+  const templateVars = { urls:urlDatabase };
   res.render("urls_index", templateVars);
 
 });
