@@ -21,14 +21,29 @@
           <th scope="col">Long URL</th>
         </tr>
       </thead>
+      
+        <div>
       <tbody>
         <% for(let url in urls) {%>
           <tr>
             <td><%= url %></td>
             <td><%= urls[url].longURL %></td>
+            <td> 
+              
+              
+                <td>
+                  <form method="POST" action="/urls/<%= url %>/delete">
+                    <input type="submit" value="Delete" />
+                  </form>
+                  </td>
+              
+            
+            </td>
           </tr>
           <% } %>
       </tbody>
+    </div>
+    
     </table>
   </main>
   <!-- Bootstrap JS -->
