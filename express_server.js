@@ -17,7 +17,7 @@ app.set("view engine", "ejs");
 const urlDatabase = {
   "b2xVn2": {
     shortURL:"b2xVn2",
-    longURL: "http://www.lighthouselabs.ca",
+    longURL: "http://www.lighthouselabs.ca"
 },
   "9sm5xK": {
     shortURL:"9sm5xK",
@@ -43,6 +43,7 @@ app.post("/urls", (req, res) => {
        // Respond with 'Ok' (we will replace this)
 });
 
+//delete
 app.post("/urls/:shortURL/delete", (req,res) => {
 
   let shortURL = req.params.shortURL;
@@ -54,6 +55,8 @@ app.post("/urls/:shortURL/delete", (req,res) => {
   
 
 });
+
+
 
 
 app.get("/urls/new", (req,res) => {
@@ -75,6 +78,18 @@ app.get("/urls/:shortURL", (req,res) => {
     longURL:urlDatabase[req.params.shortURL].longURL
   }
   res.render("urls_show", templateVars);
+});
+
+//Update
+app.post("/urls/:shortURL", (req,res) => {
+  let shortURL = req.params.shortURL;
+  let newLongURL = req.body.longURL;
+  
+  urlDatabase[shortURL].longURL = newLongURL;
+  
+  res.redirect('/urls');
+  //console.log(req.body.longURL);
+
 });
 
 
