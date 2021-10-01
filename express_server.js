@@ -37,7 +37,7 @@ app.set("view engine", "ejs");
 //   "b2xVn2": {
 //     //shortURL:"b2xVn2",
 //     longURL: "http://www.lighthouselabs.ca",
-//     userID:
+//  
 // },
 //   "9sm5xK": {
 //     shortURL:"9sm5xK",
@@ -150,12 +150,13 @@ app.get('/register', (req, res) => {
 
 
 
-let shortURL = generateRandomString(6);
+
 
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   let longURL = req.body.longURL;
+  let shortURL = generateRandomString(6);
   let userID = req.cookies.user_id;
 
   urlDatabase[shortURL] = {
@@ -173,11 +174,15 @@ app.post("/urls", (req, res) => {
 
 //delete
 app.post("/urls/:shortURL/delete", (req,res) => {
-
+  if(!findUserById(req.cookies.user_id)) {
+    return res.status(400).send("Not Authorized");
+  }
   let shortURL = req.params.shortURL;
   delete urlDatabase[shortURL];
-  
+  console.log(req.cookies.user_id);
   res.redirect("/urls");
+
+
   
  
   
@@ -222,8 +227,12 @@ app.get("/urls/:shortURL", (req,res) => {
   res.render("urls_show", templateVars);
 });
 
-//Update
+//Update here
 app.post("/urls/:shortURL", (req,res) => {
+
+  if(!findUserById(req.cookies.user_id)) {
+    return res.status(400).send("Not Authorized");
+  }
   let shortURL = req.params.shortURL;
   let newLongURL = req.body.longURL;
 
