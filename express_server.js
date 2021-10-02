@@ -3,6 +3,9 @@ const app = express();
 const PORT = 8080;
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
+const bcrypt = require('bcryptjs');
+
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 //fire up cookie parser
@@ -56,18 +59,20 @@ const urlDatabase = {
   }
 };
 
+const user1 = bcrypt.hashSync("cookinglessons",10);
+const user2 = bcrypt.hashSync("meatlover",10);
 const userDatabase = {
   eb849b1f: {
     id: 'eb849b1f',
     name: 'Kent Cook',
     email: 'really.kent.cook@kitchen.com',
-    password: 'cookinglessons',
+    password: user1,
   },
   '1dc937ec': {
     id: '1dc937ec',
     name: 'Phil A. Mignon',
     email: 'good.philamignon@steak.com',
-    password: 'meatlover',
+    password: user2,
   },
 };
 
@@ -77,16 +82,12 @@ app.post('/register', (req, res) => {
   let password = req.body.password;
   let userid = generateuserId(6);
   let name = req.body.name;
+  const hashedPassword = bcrypt.hashSync(password,10);
+  console.log(hashedPassword,password);
   
   if(email === "" || password === "" || name === "") {
     res.status(400).send("Please make sure no fields are empty");
   }
-
-  
-  
-  
-  
-
   
   let user = findUserByEmail(email);
   
@@ -95,7 +96,8 @@ app.post('/register', (req, res) => {
       id: userid,
       name,
       email,
-      password
+      password: hashedPassword
+      //password
     };
 
     res.cookie('user_id', userid);
@@ -264,19 +266,21 @@ app.post('/login',(req,res) => {
 
 let email = req.body.email;
 let password = req.body.password
-console.log(`Email: ${email},Password: ${password}`);
-
-
 const user = findUserByEmail(email);
-console.log(`Find User By Email: ${user.name}`);
 
+console.log(`Email: ${email},Password: ${password} user Password ${user.password}`);
+
+
+
+console.log(`Find User By Email: ${user.name}`);
+console.log(user.password)
 if(!user) {
   res.status(400).send("Sorry we cannot find that user")
 } else {
   
-  
+  let hashedPassword = bcrypt.compareSync(password,user.password)
 
-  if(password === user.password) {
+  if(hashedPassword) {
     res.cookie('user_id', user.id);
     res.redirect('/urls');
   } else {
