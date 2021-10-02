@@ -7,9 +7,14 @@ const findUserByEmail = function(email,userDatabase) {
       
       return userDatabase[user];
      }
+
   }
 
 };
 
+
+
+findUserByEmail()
+
 module.exports = findUserByEmail;
-console.log(module)
+
