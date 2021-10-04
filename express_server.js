@@ -193,9 +193,13 @@ app.get("/urls/:shortURL", (req,res) => {
   };
   
 
+  if(!templateVars.user) {
+   return res.status(403).send('You do not have permission to edit this URL.')
+  }
   if(urlDatabase[templateVars.shortURL].userID === templateVars.user.id) {
     return res.render("urls_show", templateVars);
   } 
+
   res.status(403).send('You do not have permission to edit this URL.')
 });
 
