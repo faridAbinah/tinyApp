@@ -191,7 +191,12 @@ app.get("/urls/:shortURL", (req,res) => {
     user: findUserById(req.session.user_id,userDatabase)
     
   };
-  res.render("urls_show", templateVars);
+  
+
+  if(urlDatabase[templateVars.shortURL].userID === templateVars.user.id) {
+    return res.render("urls_show", templateVars);
+  } 
+  res.status(403).send('You do not have permission to edit this URL.')
 });
 
 
@@ -278,6 +283,8 @@ app.get("/urls", (req,res) => {
     user: findUserById(req.session.user_id,userDatabase)
     
   };
+
+  
   res.render("urls_index", templateVars);
 
 });
